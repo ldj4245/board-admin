@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<thlogic>
+    <attr sel="#footer-link"
+          th:href="@{https://github.com/ldj4245/board-admin}"
+          th:text="'게시판 어드민 프로젝트 GitHub'" />
+    <attr sel="#page-link"
+          th:href="@{https://github.com/ldj4245/board-admin}"
+          th:text="'GenieLee'" />
+</thlogic>
