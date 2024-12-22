@@ -18,6 +18,6 @@ public class UserAccountManagementController {
             @PageableDefault(size = 10, sort="createdAt", direction = Sort.Direction.DESC)
             Pageable pageable, Model model
     ){
-        return "management/userAccounts";
+        return "management/user-accounts";
     }
 }
