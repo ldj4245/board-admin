@@ -20,7 +20,7 @@ import java.util.Set;
         @Index(columnList = "createdBy")
 })
 @Entity
-public class UserAccount extends AuditingFields {
+public class AdminAccount extends AuditingFields {
 
     @Id
     @Column(length = 50)
@@ -37,9 +37,9 @@ public class UserAccount extends AuditingFields {
     @Setter private String memo;
 
 
-    protected UserAccount() {}
+    protected AdminAccount() {}
 
-    private UserAccount(String userId, String userPassword, Set<RoleType> roleTypes, String email, String nickname, String memo, String createdBy) {
+    private AdminAccount(String userId, String userPassword, Set<RoleType> roleTypes, String email, String nickname, String memo, String createdBy) {
         this.userId = userId;
         this.userPassword = userPassword;
         this.roleTypes = roleTypes;
@@ -51,13 +51,13 @@ public class UserAccount extends AuditingFields {
     }
 
 
-    public static UserAccount of(String userId, String userPassword,Set<RoleType> roletypes, String email, String nickname, String memo) {
-        return new UserAccount(userId, userPassword,roletypes, email, nickname, memo,null);
+    public static AdminAccount of(String userId, String userPassword, Set<RoleType> roletypes, String email, String nickname, String memo) {
+        return new AdminAccount(userId, userPassword,roletypes, email, nickname, memo,null);
     }
 
 
-    public static UserAccount of(String userId, String userPassword,Set<RoleType> roleTypes, String email, String nickname, String memo, String createdBy) {
-        return new UserAccount(userId, userPassword,roleTypes, email, nickname, memo,createdBy);
+    public static AdminAccount of(String userId, String userPassword, Set<RoleType> roleTypes, String email, String nickname, String memo, String createdBy) {
+        return new AdminAccount(userId, userPassword,roleTypes, email, nickname, memo,createdBy);
     }
 
     public void addRoleType(RoleType roleType) {
@@ -75,7 +75,7 @@ public class UserAccount extends AuditingFields {
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (!(object instanceof UserAccount that)) return false;
+        if (!(object instanceof AdminAccount that)) return false;
         return Objects.equals(getUserId(), that.getUserId());
     }
 
