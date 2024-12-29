@@ -1,6 +1,7 @@
 package com.leedae.boardandadmin.controller;
 
 import com.leedae.boardandadmin.config.SecurityConfig;
+import com.leedae.boardandadmin.config.TestSecurityConfig;
 import com.leedae.boardandadmin.dto.UserAccountDto;
 import com.leedae.boardandadmin.service.UserAccountManagementService;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @DisplayName("View 컨트롤러 - 회원 관리")
-@Import(SecurityConfig.class)
+@Import(TestSecurityConfig.class)
 @WebMvcTest(UserAccountManagementController.class)
 class UserAccountManagementControllerTest {
 
