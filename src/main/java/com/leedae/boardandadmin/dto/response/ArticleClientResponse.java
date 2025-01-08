@@ -23,9 +23,13 @@ public record ArticleClientResponse(
         );
     }
 
-    public List<ArticleDto> articles(){ return this.embedded().articles(); }
+    public List<ArticleDto> articles(){
+        return this.embedded().articles();
+    }
 
-    public record Embedded(@JsonProperty("articles") List<ArticleDto> articles){}
+    public record Embedded(@JsonProperty("articles") List<ArticleDto> articles){
+
+    }
 
     public record Page(
             int size,

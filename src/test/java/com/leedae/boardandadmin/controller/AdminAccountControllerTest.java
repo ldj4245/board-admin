@@ -2,6 +2,8 @@ package com.leedae.boardandadmin.controller;
 
 import com.leedae.boardandadmin.config.SecurityConfig;
 import com.leedae.boardandadmin.config.TestSecurityConfig;
+import com.leedae.boardandadmin.domain.constant.RoleType;
+import com.leedae.boardandadmin.dto.AdminAccountDto;
 import com.leedae.boardandadmin.service.AdminAccountService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -46,6 +49,8 @@ class AdminAccountControllerTest {
                 .willReturn(createAdminAccountDto());
 
     }
+
+
 
     @WithMockUser(username = "tester", roles = "USER")
     @DisplayName("[view][GET] 어드민 회원 페이지 - 정상 호출")
@@ -90,6 +95,17 @@ class AdminAccountControllerTest {
                 .andExpect(status().isNoContent());
 
         then(adminAccountService).should().deleteUser(username);
+    }
+
+    private AdminAccountDto createAdminAccountDto() {
+        return AdminAccountDto.of(
+                "lee",
+                "pw",
+                Set.of(RoleType.USER),
+                "hero@hero.com",
+                "hero-test",
+                "hero 짱 좋던데 ㅎㅎ.."
+        );
     }
 
 
