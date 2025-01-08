@@ -57,7 +57,7 @@ class ArticleManagementServiceTest {
 
         @DisplayName("게시글 API를 호출하면, 게시글을 가져온다.")
         @Test
-        void given_when_then(){
+        void givenNothing_whenCallingArticleApi_thenReturnsArticleList(){
             // Given
 
             // When
@@ -98,19 +98,21 @@ class ArticleManagementServiceTest {
 
         @DisplayName("게시글 목록 API를 호출하면, 게시글들을 가져온다.")
         @Test
-        void givenNothing_whenCallingArticlesApi_thenReturnsArticleList() throws JsonProcessingException {
+        void givenNothing_whenCallingArticlesApi_thenReturnsArticleList() throws Exception{
             //given
             ArticleDto expectedArticle = createArticleDto("제목", "글");
             ArticleClientResponse expectedResponse = ArticleClientResponse.of(List.of(expectedArticle));
 
-            //when
-            List<ArticleDto> result = sut.getArticles();
+
             server
                     .expect(requestTo(projectProperties.board().url() + "/api/articles?size=10000"))
-                    .andRespond(MockRestResponseCreators.withSuccess(
-                            mapper.writeValueAsBytes(expectedResponse),
+                    .andRespond(withSuccess(
+                            mapper.writeValueAsString(expectedResponse),
                             MediaType.APPLICATION_JSON
                     ));
+
+            // When
+            List<ArticleDto> result = sut.getArticles();
 
             //then
             assertThat(result).first()
