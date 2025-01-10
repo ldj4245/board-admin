@@ -22,7 +22,7 @@ public class ArticleCommentManagementService {
 
 
     public List<ArticleCommentDto> getArticleComments() {
-        URI uri = UriComponentsBuilder.fromHttpUrl(projectProperties.board().url() + "/api/articlesComments")
+        URI uri = UriComponentsBuilder.fromHttpUrl(projectProperties.board().url() + "/api/articleComments")
                 .queryParam("size",10000)
                 .build()
                 .toUri();
