@@ -11,13 +11,16 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.test.autoconfigure.web.client.AutoConfigureWebClient;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.client.MockRestServiceServer;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -60,10 +63,12 @@ class ArticleCommentManagementServiceTest {
         }
     }
 
+
     @DisplayName("API mocking 테스트")
     @EnableConfigurationProperties(ProjectProperties.class)
+    @AutoConfigureWebClient(registerRestTemplate = true)
     @RestClientTest(ArticleCommentManagementService.class)
-    @Nested
+    @Nested //중첩 테스트
     class RestTemplateTest {
 
         private final ArticleCommentManagementService sut;
@@ -73,7 +78,7 @@ class ArticleCommentManagementServiceTest {
 
 
         @Autowired
-        RestTemplateTest(ArticleCommentManagementService sut, ProjectProperties projectProperties, MockRestServiceServer server, ObjectMapper mapper) {
+        public RestTemplateTest(ArticleCommentManagementService sut, ProjectProperties projectProperties, MockRestServiceServer server, ObjectMapper mapper) {
             this.sut = sut;
             this.projectProperties = projectProperties;
             this.server = server;
@@ -102,6 +107,34 @@ class ArticleCommentManagementServiceTest {
                     .hasFieldOrPropertyWithValue("content", expectedComment.content())
                     .hasFieldOrPropertyWithValue("userAccount.nickname", expectedComment.userAccount().nickname());
             server.verify();
+        }
+
+        @DisplayName("댓글 ID와 함께 댓글 API를 호출하면, 댓글을 가져온다.")
+        @Test
+        void givenCommentId_whenCallingCommentApi_thenReturnsComment() throws Exception{
+            //given
+            Long articleCommentId = 1L;
+            ArticleCommentDto expectedComment = createArticleCommentDto("댓글");
+
+            server
+                    .expect(requestTo(projectProperties.board().url() + "/api/articleComments/" + articleCommentId + "?projection=withUserAccount"))
+                    .andRespond(
+                            withSuccess(
+                                    mapper.writeValueAsString(expectedComment),
+                                    MediaType.APPLICATION_JSON
+                            )
+                    );
+
+            // when
+            ArticleCommentDto result = sut.getArticleComment(articleCommentId);
+
+            // Then
+            assertThat(result)
+                    .hasFieldOrPropertyWithValue("id",expectedComment.id())
+                    .hasFieldOrPropertyWithValue("content",expectedComment.content())
+                    .hasFieldOrPropertyWithValue("userAccount.nickname",expectedComment.userAccount().nickname());
+            server
+                    .verify();
 
 
         }
