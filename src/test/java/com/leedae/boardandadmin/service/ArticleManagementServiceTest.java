@@ -123,13 +123,14 @@ class ArticleManagementServiceTest {
             server.verify();
         }
 
-        @DisplayName("게시글 ID와 함께 게시글 API을 호출하면, 게시글을 가져온다.")        @Test
+        @DisplayName("게시글 ID와 함께 게시글 API을 호출하면, 게시글을 가져온다.")
+        @Test
         void givenNothing_whenCallingArticleApi_thenReturnsArticle() throws Exception {
             //given
             Long articleId = 1L;
             ArticleDto expectedArticle = createArticleDto("게시판", "글");
             server
-                    .expect(requestTo(projectProperties.board().url() + "/api/articles/" + articleId))
+                    .expect(requestTo(projectProperties.board().url() + "/api/articles/" + articleId + "?projection=withUserAccount"))
                     .andRespond(MockRestResponseCreators.withSuccess(
                             mapper.writeValueAsBytes(expectedArticle),
                             MediaType.APPLICATION_JSON
