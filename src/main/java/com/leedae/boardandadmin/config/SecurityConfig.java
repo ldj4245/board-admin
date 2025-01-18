@@ -1,6 +1,5 @@
 package com.leedae.boardandadmin.config;
 
-
 import com.leedae.boardandadmin.domain.constant.RoleType;
 import com.leedae.boardandadmin.dto.security.BoardAdminPrincipal;
 import com.leedae.boardandadmin.dto.security.KakaoOAuth2Response;
@@ -20,7 +19,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 
-
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
@@ -31,9 +29,7 @@ import static org.springframework.security.config.Customizer.withDefaults;
 public class SecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http
-    ) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         String[] rolesAboveManager = {RoleType.MANAGER.name(), RoleType.ADMIN.name(), RoleType.DEVELOPER.name()};
 
         return http
@@ -45,7 +41,11 @@ public class SecurityConfig {
                 )
                 .formLogin(withDefaults())
                 .logout(logout -> logout.logoutSuccessUrl("/"))
-                .oauth2Login(withDefaults())
+                .oauth2Login(oauth2 -> oauth2
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuth2UserService(null, null)) // 실제 주입은 Spring이 처리
+                        )
+                )
                 .build();
     }
 
@@ -55,6 +55,28 @@ public class SecurityConfig {
                 .searchUser(username)
                 .map(BoardAdminPrincipal::from)
                 .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다 - username: " + username));
+    }
+
+    @Bean
+    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService(
+            AdminAccountService adminAccountService,
+            PasswordEncoder passwordEncoder
+    ) {
+        final DefaultOAuth2UserService delegate = new DefaultOAuth2UserService();
+
+        return userRequest -> {
+            OAuth2User oAuth2User = delegate.loadUser(userRequest);
+            String registrationId = userRequest.getClientRegistration().getRegistrationId();
+
+            // OAuth 제공자에 따른 처리
+            if ("kakao".equals(registrationId)) {
+                return processKakaoOAuth2User(userRequest, oAuth2User, adminAccountService, passwordEncoder);
+            } else if ("naver".equals(registrationId)) {
+                return processNaverOAuth2User(userRequest, oAuth2User, adminAccountService, passwordEncoder);
+            }
+
+            throw new IllegalArgumentException("지원하지 않는 OAuth2 제공자입니다: " + registrationId);
+        };
     }
 
     private OAuth2User processKakaoOAuth2User(
@@ -128,9 +150,9 @@ public class SecurityConfig {
                         )
                 );
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
-
 }
