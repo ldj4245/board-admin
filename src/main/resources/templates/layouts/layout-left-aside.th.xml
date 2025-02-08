@@ -24,4 +24,7 @@
             th:href="@{/admin/members}"
             th:classappend="${#request.requestURI.equals('/admin/members')} ? 'active'"
     />
+
+<!-- controllerAdvice 전역 설정에서 ModelAttribute 어노테이션을 visitCount로 설정했기 때문에 가능함-->
+    <attr sel="#visit-count" th:text="${visitCount}" />
 </thlogic>

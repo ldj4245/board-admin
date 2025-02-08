@@ -1,5 +1,6 @@
 package com.leedae.boardandadmin.controller;
 
+import com.leedae.boardandadmin.config.GlobalControllerConfig;
 import com.leedae.boardandadmin.config.SecurityConfig;
 import com.leedae.boardandadmin.config.TestSecurityConfig;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @DisplayName("View 루트 컨트롤러")
-@Import(TestSecurityConfig.class)
+@Import({TestSecurityConfig.class, GlobalControllerConfig.class})
 @WebMvcTest(controllers = MainController.class)
 class MainControllerTest {
 

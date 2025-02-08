@@ -1,5 +1,6 @@
 package com.leedae.boardandadmin.controller;
 
+import com.leedae.boardandadmin.config.GlobalControllerConfig;
 import com.leedae.boardandadmin.config.SecurityConfig;
 import com.leedae.boardandadmin.config.TestSecurityConfig;
 import com.leedae.boardandadmin.domain.constant.RoleType;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("컨트롤러 - 게시글 관리")
-@Import(TestSecurityConfig.class)
+@Import({TestSecurityConfig.class, GlobalControllerConfig.class})
 @WebMvcTest(ArticleManagementController.class)
 class ArticleManagementControllerTest {
 

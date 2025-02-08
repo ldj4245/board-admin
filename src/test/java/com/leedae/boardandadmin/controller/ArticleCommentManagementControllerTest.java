@@ -1,5 +1,6 @@
 package com.leedae.boardandadmin.controller;
 
+import com.leedae.boardandadmin.config.GlobalControllerConfig;
 import com.leedae.boardandadmin.config.SecurityConfig;
 import com.leedae.boardandadmin.config.TestSecurityConfig;
 import com.leedae.boardandadmin.domain.constant.RoleType;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @DisplayName("View 컨트롤러 댓글 관리")
-@Import(TestSecurityConfig.class)
+@Import({TestSecurityConfig.class, GlobalControllerConfig.class})
 @WebMvcTest(controllers = ArticleCommentManagementController.class)
 class ArticleCommentManagementControllerTest {
 

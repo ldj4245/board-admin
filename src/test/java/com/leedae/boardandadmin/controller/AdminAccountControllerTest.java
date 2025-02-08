@@ -1,5 +1,6 @@
 package com.leedae.boardandadmin.controller;
 
+import com.leedae.boardandadmin.config.GlobalControllerConfig;
 import com.leedae.boardandadmin.config.SecurityConfig;
 import com.leedae.boardandadmin.config.TestSecurityConfig;
 import com.leedae.boardandadmin.domain.constant.RoleType;
@@ -30,7 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @DisplayName("View 컨트롤러 - 어드민 회원")
-@Import(SecurityConfig.class)
+@Import({SecurityConfig.class, GlobalControllerConfig.class})
 @WebMvcTest(AdminAccountController.class)
 class AdminAccountControllerTest {
 
